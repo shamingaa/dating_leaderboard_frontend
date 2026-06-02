@@ -31,7 +31,8 @@ function PriceInput({ label, name, value, onChange }) {
           onChange={handleChange}
           placeholder="0"
           required
-          className="flex-1 py-2.5 pr-3.5 bg-transparent outline-none text-sm text-gray-800"
+          className="flex-1 py-2.5 pr-3.5 bg-transparent outline-none text-gray-800"
+          style={{ fontSize: 16 }}
         />
       </div>
     </div>
