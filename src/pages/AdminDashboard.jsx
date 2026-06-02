@@ -9,6 +9,7 @@ import TierBadge from '../components/TierBadge';
 import BadgesDisplay from '../components/BadgesDisplay';
 import ParticipantModal from '../components/ParticipantModal';
 import SettingsModal from '../components/SettingsModal';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 
 const CLIENT_URL = window.location.origin;
 
@@ -42,6 +43,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('leaderboard');
   const [participantModal, setParticipantModal] = useState({ open: false, participant: null });
   const [settingsModal, setSettingsModal] = useState(false);
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const fetchAll = useCallback(async () => {
@@ -112,6 +114,12 @@ export default function AdminDashboard() {
               className="hidden sm:block text-sm text-[#374151] font-medium px-3 py-1.5 rounded-lg border border-[#e4e4e4] hover:bg-[#fafaf8] transition"
             >
               Pricing
+            </button>
+            <button
+              onClick={() => setChangePasswordModal(true)}
+              className="hidden sm:block text-sm text-[#374151] font-medium px-3 py-1.5 rounded-lg border border-[#e4e4e4] hover:bg-[#fafaf8] transition"
+            >
+              Change Password
             </button>
             <button
               onClick={logout}
@@ -311,6 +319,11 @@ export default function AdminDashboard() {
         settings={settings}
         onClose={() => setSettingsModal(false)}
         onSaved={fetchAll}
+      />
+
+      <ChangePasswordModal
+        open={changePasswordModal}
+        onClose={() => setChangePasswordModal(false)}
       />
 
       {deleteConfirm && (

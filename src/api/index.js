@@ -16,6 +16,8 @@ export const adminCheck = () => api.get('/api/admin/check');
 export const adminSetup = (password) => api.post('/api/admin/setup', { password });
 export const adminLogin = (password) => api.post('/api/admin/login', { password });
 export const getStats = () => api.get('/api/admin/stats');
+export const changePassword = (current_password, new_password) =>
+  api.post('/api/admin/change-password', { current_password, new_password });
 export const getParticipants = () => api.get('/api/admin/participants');
 export const createParticipant = (data) => api.post('/api/admin/participants', data);
 export const updateParticipant = (id, data) => api.put(`/api/admin/participants/${id}`, data);
