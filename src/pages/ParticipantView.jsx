@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { getParticipantData } from '../api';
 import Leaderboard from '../components/Leaderboard';
+import TopThreeCards from '../components/TopThreeCards';
 import BoostModal from '../components/BoostModal';
 
 import ConfettiEffect from '../components/ConfettiEffect';
@@ -97,6 +98,11 @@ export default function ParticipantView() {
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-4 pb-14">
+
+        {/* Top 3 podium */}
+        {leaderboard.length >= 1 && (
+          <TopThreeCards leaderboard={leaderboard} participantId={participant.id} />
+        )}
 
         <div>
           <h3 className="font-bold text-[#0f0f0f] mb-3">Full Leaderboard</h3>

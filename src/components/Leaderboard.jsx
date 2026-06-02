@@ -3,17 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TierBadge from './TierBadge';
 import BadgesDisplay from './BadgesDisplay';
 
-function RankCell({ rank, isYou }) {
-  if (rank <= 3) {
-    return (
-      <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold rank-${rank}`}>
-        {rank}
-      </span>
-    );
-  }
+function RankCell({ rank }) {
   return (
-    <span className={`font-semibold text-sm ${isYou ? 'text-[#DC2626]' : 'text-[#9ca3af]'}`}>
-      #{rank}
+    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold
+      ${rank <= 3 ? `rank-${rank}` : 'bg-[#f3f0ee] text-[#374151]'}`}>
+      {rank}
     </span>
   );
 }
@@ -58,7 +52,7 @@ export default function Leaderboard({ leaderboard, highlightId, onBoostClick }) 
             >
               <div className={`grid grid-cols-[56px_1fr_80px_64px] gap-2 items-center px-4 ${hasExtra ? 'pt-4 pb-2' : 'py-4'}`}>
                 <div className="flex justify-center">
-                  <RankCell rank={p.rank_position} isYou={isYou} />
+                  <RankCell rank={p.rank_position} />
                 </div>
 
                 <div className="min-w-0">

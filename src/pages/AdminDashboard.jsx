@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -28,6 +28,48 @@ function StatCard({ label, value }) {
     <div className="bg-white rounded-2xl border border-[#e4e4e4] shadow-sm p-5">
       <p className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wider mb-1">{label}</p>
       <p className="text-2xl font-black text-[#0f0f0f]">{value}</p>
+    </div>
+  );
+}
+
+function RevenueCard({ amount }) {
+  const [displayed, setDisplayed] = useState(amount);
+  const prevRef = useRef(amount);
+
+  useEffect(() => {
+    const start = prevRef.current;
+    const end = amount;
+    if (start === end) return;
+    prevRef.current = end;
+
+    const duration = 800;
+    const steps = 40;
+    const increment = (end - start) / steps;
+    let current = start;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      current += increment;
+      if (step >= steps) {
+        setDisplayed(end);
+        clearInterval(timer);
+      } else {
+        setDisplayed(Math.round(current));
+      }
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [amount]);
+
+  const formatted = new Intl.NumberFormat('en-NG', {
+    style: 'currency', currency: 'NGN', minimumFractionDigits: 0,
+  }).format(displayed);
+
+  return (
+    <div className="bg-[#DC2626] rounded-2xl p-6 shadow-sm">
+      <p className="text-xs font-semibold text-red-200 uppercase tracking-wider mb-2">Total Revenue</p>
+      <p className="text-2xl font-black text-white tracking-tight">{formatted}</p>
     </div>
   );
 }
@@ -63,7 +105,11 @@ export default function AdminDashboard() {
     }
   }, []);
 
-  useEffect(() => { fetchAll(); }, [fetchAll]);
+  useEffect(() => {
+    fetchAll();
+    const interval = setInterval(fetchAll, 30000);
+    return () => clearInterval(interval);
+  }, [fetchAll]);
 
   const handleDelete = async (id) => {
     try {
@@ -117,9 +163,12 @@ export default function AdminDashboard() {
             </button>
             <button
               onClick={() => setChangePasswordModal(true)}
-              className="hidden sm:block text-sm text-[#374151] font-medium px-3 py-1.5 rounded-lg border border-[#e4e4e4] hover:bg-[#fafaf8] transition"
+              title="Change Password"
+              className="p-2 rounded-lg border border-[#e4e4e4] text-[#374151] hover:bg-[#fafaf8] transition"
             >
-              Change Password
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
             </button>
             <button
               onClick={logout}
@@ -133,10 +182,12 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        {/* Revenue — full width */}
+        <RevenueCard amount={parseFloat(stats.total_revenue) || 0} />
+
+        {/* Other stats */}
+        <div className="grid grid-cols-2 gap-4">
           <StatCard label="Participants" value={stats.total_participants || 0} />
-          <StatCard label="Revenue" value={formatCurrency(stats.total_revenue)} />
           <StatCard label="Total Boosts" value={stats.total_boosts || 0} />
         </div>
 
