@@ -4,9 +4,10 @@ import toast from 'react-hot-toast';
 import { updateSettings } from '../api';
 
 function formatDisplay(raw) {
-  const digits = String(raw).replace(/\D/g, '');
-  if (!digits) return '';
-  return Number(digits).toLocaleString('en-NG');
+  if (raw === '' || raw === null || raw === undefined) return '';
+  const num = Math.round(parseFloat(String(raw).replace(/,/g, '')));
+  if (isNaN(num) || num === 0) return '';
+  return num.toLocaleString('en-NG');
 }
 
 function parseRaw(formatted) {
@@ -46,9 +47,9 @@ export default function SettingsModal({ open, onClose, settings, onSaved }) {
   useEffect(() => {
     if (settings) {
       setForm({
-        nudge_price:  String(settings.nudge_price  ?? ''),
-        push_price:   String(settings.push_price   ?? ''),
-        launch_price: String(settings.launch_price ?? ''),
+        nudge_price:  String(Math.round(parseFloat(settings.nudge_price)  || 0)),
+        push_price:   String(Math.round(parseFloat(settings.push_price)   || 0)),
+        launch_price: String(Math.round(parseFloat(settings.launch_price) || 0)),
       });
     }
   }, [settings, open]);
