@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     adminCheck()
-      .then((res) => setAdminExists(res.data.exists))
+      .then((res) => setAdminExists(res.data?.exists === true))
       .catch(() => setAdminExists(false));
   }, []);
 
